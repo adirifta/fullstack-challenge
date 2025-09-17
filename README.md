@@ -20,6 +20,7 @@ order-service:
 - Docker & Docker Compose - Containerization dan orchestration
 
 ## Struktur Proyek
+```bash
 ├── docker-compose.yml
 ├── user-service/
 │   ├── src/
@@ -48,6 +49,7 @@ order-service:
 │   ├── Dockerfile
 │   └── package.json
 └── README.md
+```
 
 ### Cara Menjalankan Aplikasi
 ## Prerequisites
@@ -72,23 +74,23 @@ Docker dan Docker Compose terinstal di PC/Laptop
 ### Contoh Permintaan API
 ## User Service
 Membuat Pengguna Baru
-`
+```bash
 curl -X POST http://localhost:3001/users \
   -H "Content-Type: application/json" \
   -d '{
     "name": "John Doe",
     "email": "john.doe@example.com"
   }'
-`
+```
 
 Mendapatkan Pengguna berdasarkan ID
-`
+```bash
 curl -X GET http://localhost:3001/users/1
-`
+```
 
 ## Order Service
 Membuat Pesanan Baru
-`
+```bash
 curl -X POST http://localhost:3002/orders \
   -H "Content-Type: application/json" \
   -d '{
@@ -97,18 +99,18 @@ curl -X POST http://localhost:3002/orders \
     "price": 15000000,
     "status": "pending"
   }'
-`
+```
 
 Mendapatkan Pesanan berdasarkan User ID
-`
+```bash
 curl -X GET http://localhost:3002/orders/user/1
-`
+```
 
 ## Arsitektur
 Aplikasi ini mengikuti arsitektur mikroservis dengan layanan yang terpisah untuk manajemen pengguna dan pesanan. Komunikasi antara layanan dilakukan secara asynchronous menggunakan RabbitMQ. Redis digunakan sebagai layer caching untuk meningkatkan performa. Setiap layanan memiliki database PostgreSQL sendiri untuk memastikan decoupling.
 
 ## Diagram Arsitektur
-`
+```bash
 Client -> [API Gateway] -> user-service (POST /users -> emit event)
                          -> order-service (POST /orders -> validate user)
                          
@@ -116,7 +118,7 @@ user-service <-> Redis (caching)
 order-service <-> Redis (caching)
 
 user-service --[user_created]--> RabbitMQ --> order-service (consumes event)
-`
+```
 
 ## Pengujian
 Setiap layanan dilengkapi dengan unit test. Untuk menjalankan test:
@@ -124,6 +126,7 @@ Setiap layanan dilengkapi dengan unit test. Untuk menjalankan test:
 ## Di dalam direktori user-service
 `
 npm test
+`
 
 ## Di dalam direktori order-service
 `
