@@ -1,15 +1,21 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
 
-@Entity('users')
-export class User {
+@Entity('orders')
+export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
-  name: string;
+  userId: string;
 
-  @Column({ unique: true })
-  email: string;
+  @Column()
+  product: string;
+
+  @Column('decimal')
+  price: number;
+
+  @Column({ default: 'pending' })
+  status: string;
 
   @CreateDateColumn()
   createdAt: Date;

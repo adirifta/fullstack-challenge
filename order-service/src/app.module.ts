@@ -1,10 +1,27 @@
+// order-service/src/app.module.ts
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CacheModule } from '@nestjs/cache-manager';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.POSTGRES_HOST || 'localhost',
+      port: parseInt(process.env.POSTGRES_PORT || '5432'), // Perbaikan di sini
+      username: process.env.POSTGRES_USER || 'postgres',
+      password: process.env.POSTGRES_PASSWORD || 'password',
+      database: process.env.POSTGRES_DB || 'microservices',
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: true,
+      retryAttempts: 3,
+      retryDelay: 3000,
+    }),
+    CacheModule.register({
+      isGlobal: true,
+    }),
+    OrdersModule,
+  ],
 })
 export class AppModule {}
