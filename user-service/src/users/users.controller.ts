@@ -11,7 +11,7 @@ export class UsersController {
     try {
       return await this.usersService.createUser(createUserDto);
     } catch (error) {
-      if (error.code === '23505') { // Unique constraint violation
+      if (error.code === '23505') {
         throw new HttpException('Email already exists', HttpStatus.CONFLICT);
       }
       throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);

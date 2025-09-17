@@ -20,7 +20,6 @@ order-service:
 - Docker & Docker Compose - Containerization dan orchestration
 
 ## Struktur Proyek
-`
 ├── docker-compose.yml
 ├── user-service/
 │   ├── src/
@@ -49,7 +48,6 @@ order-service:
 │   ├── Dockerfile
 │   └── package.json
 └── README.md
-`
 
 ### Cara Menjalankan Aplikasi
 ## Prerequisites
@@ -122,10 +120,12 @@ user-service --[user_created]--> RabbitMQ --> order-service (consumes event)
 
 ## Pengujian
 Setiap layanan dilengkapi dengan unit test. Untuk menjalankan test:
+
+## Di dalam direktori user-service
 `
-# Di dalam direktori user-service
 npm test
 
-# Di dalam direktori order-service
+## Di dalam direktori order-service
+`
 npm test
 `

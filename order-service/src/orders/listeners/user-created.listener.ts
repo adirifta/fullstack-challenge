@@ -13,7 +13,6 @@ export class UserCreatedListener {
     try {
       this.logger.log(`Received user.created event: ${JSON.stringify(payload)}`);
       
-      // Acknowledge the message
       const channel = context.getChannelRef();
       const originalMsg = context.getMessage();
       channel.ack(originalMsg);
@@ -21,7 +20,6 @@ export class UserCreatedListener {
     } catch (error) {
       this.logger.error(`Error processing user.created event: ${error.message}`);
       
-      // Negative acknowledge the message (will be requeued)
       const channel = context.getChannelRef();
       const originalMsg = context.getMessage();
       channel.nack(originalMsg);

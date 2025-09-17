@@ -1,6 +1,6 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import type { Cache } from 'cache-manager'; // Gunakan import type
+import type { Cache } from 'cache-manager';
 import { OrdersRepository } from './orders.repository';
 import { UserClient } from '../common/clients/user.client';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -20,7 +20,6 @@ export class OrdersService {
     try {
       this.logger.log(`Creating order for user: ${createOrderDto.userId}`);
       
-      // Verify user exists
       this.logger.log('Verifying user existence...');
       await this.userClient.getUserById(createOrderDto.userId);
       this.logger.log('User verified successfully');
@@ -32,7 +31,6 @@ export class OrdersService {
       });
 
       this.logger.log('Invalidating cache...');
-      // Invalidate cache for user's orders
       await this.cacheManager.del(`orders_user_${createOrderDto.userId}`);
 
       this.logger.log('Order created successfully');
@@ -48,8 +46,7 @@ export class OrdersService {
   async getOrdersByUserId(userId: string): Promise<OrderResponseDto[]> {
     try {
       this.logger.log(`Getting orders for user: ${userId}`);
-      
-      // Try to get from cache first
+
       const cacheKey = `orders_user_${userId}`;
       const cachedOrders = await this.cacheManager.get(cacheKey);
       if (cachedOrders) {
@@ -57,11 +54,9 @@ export class OrdersService {
         return (cachedOrders as any[]).map(order => new OrderResponseDto(order));
       }
 
-      // If not in cache, get from database
       this.logger.log('Fetching orders from database');
       const orders = await this.ordersRepository.findByUserId(userId);
 
-      // Store in cache for future requests (TTL: 5 minutes)
       await this.cacheManager.set(cacheKey, orders, 300000);
       
       this.logger.log('Returning orders from database');

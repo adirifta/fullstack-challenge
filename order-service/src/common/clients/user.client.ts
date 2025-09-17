@@ -1,5 +1,5 @@
 import { Injectable, HttpException, Logger } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios'; // Import dari @nestjs/axios
+import { HttpService } from '@nestjs/axios';
 import { catchError, map } from 'rxjs/operators';
 import { firstValueFrom } from 'rxjs';
 
