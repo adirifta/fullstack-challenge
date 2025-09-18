@@ -126,6 +126,7 @@ docker exec -it postgres_db psql -U postgres -d microservices -c "SELECT version
 ```
 
 Mengecek Database
+
 ```bash
 # Masuk ke container postgres
 docker exec -it postgres_db psql -U postgres -d microservices
@@ -142,7 +143,7 @@ docker exec -it postgres_db psql -U postgres -d microservices
 # Lihat struktur table users
 \d users
 
-# Lihat struktur table orders  
+# Lihat struktur table orders
 \d orders
 
 # Lihat data users
@@ -175,9 +176,10 @@ GROUP BY u.id, u.name, u.email;
 - user-service: http://localhost:3001
 - order-service: http://localhost:3002
 
-
 ## Bisa Pull Images Manual
+
 ### Docker dengan Build
+
 ```bash
 # Pull images satu per satu
 docker pull postgres:15-alpine
@@ -199,6 +201,7 @@ docker compose up user-service order-service
 ```
 
 ### Docker tanpa Build
+
 ```bash
 # Hanya jalankan infrastrukturnya
 docker compose up -d postgres redis rabbitmq
@@ -207,7 +210,7 @@ docker compose up -d postgres redis rabbitmq
 docker compose ps
 
 # Lalu jalankan services secara manual di terminal terpisah
-# Terminal 1: 
+# Terminal 1:
 cd user-service && npm run start:dev
 
 # Terminal 2:
@@ -336,15 +339,20 @@ Aplikasi ini mengikuti arsitektur mikroservis dengan layanan yang terpisah untuk
 
 ## Diagram Arsitektur
 
-```bash
-Client -> [API Gateway] -> user-service (POST /users -> emit event)
-                         -> order-service (POST /orders -> validate user)
+<p align="center">
+  <img src="docs/architecture.jpg" alt="Architecture Diagram" width="600"/>
+</p>
 
-user-service <-> Redis (caching)
-order-service <-> Redis (caching)
+### Penjelasan Singkat
 
-user-service --[user_created]--> RabbitMQ --> order-service (consumes event)
-```
+- **Client** berinteraksi melalui **API Gateway**.
+- **user-service** menangani pembuatan user (`POST /users`) dan mengirim event `user_created`.
+- **order-service** menangani pembuatan order (`POST /orders`) serta memvalidasi user.
+- **Redis** digunakan untuk caching pada kedua service.
+- **RabbitMQ** digunakan sebagai message broker:
+  - `user-service` mem-publish event `user_created`.
+  - `order-service` mengkonsumsi event `user_created` untuk validasi order.
+
 
 ## Pengujian
 
